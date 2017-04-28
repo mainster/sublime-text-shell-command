@@ -237,6 +237,26 @@ class ShellCommandOnRegionCommand(ShellCommandCommand):
 
         ShellCommandCommand.run(self, edit, command=command, command_prefix=command_prefix, prompt=prompt, region='stdin', arg_required=True, panel=panel, target=target, title=title, syntax=syntax, refresh=refresh)
 
+from pprint import pprint as pp
+from mdLibs import mdosd as osd
+class ShellCommandFromSelectionCommand(ShellCommandCommand):
+
+    def run(self, edit, command=None, command_prefix=None, prompt=None, arg_required=None, panel=None, target=None, title=None, syntax=None, refresh=None):
+        view = self.view;
+        if view.sel()[0].empty():
+            view.run_command("expand_region", {"mdargs": ["expand_line_strip_lr"]})
+            command = view.substr(view.line(view.sel()[0])).lstrip().rstrip()
+        else:
+            command = view.substr(view.sel()[0]).lstrip().rstrip()
+
+
+
+        # osd.info("command", command).send()
+        # return
+        ShellCommandCommand.run(self, edit, 
+            command=command, command_prefix=command_prefix, prompt=prompt, region='stdin', arg_required=True, panel=panel, target=target, title=title, 
+            syntax=syntax, refresh=refresh)
+
 
 # Refreshing a shell command simply involves re-running the original command:
 #
